@@ -41,7 +41,7 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 			fmt.Println(": " + strings.Join(v, ","))
 			 _, err := http.NewRequest("GET", "./from.html", nil)
 			 if err != nil {
-				 log.Fatal(err)
+				 log.Print(err)
 			 }
 		}
 
@@ -49,11 +49,11 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 		defer req.Body.Close()
 		body,err := ioutil.ReadAll(req.Body)
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 		}
 		decoded,err := url.QueryUnescape(string(body))
 		if err != nil {
-			log.Fatal(err)
+			log.Print(err)
 		}
 		fmt.Println("[Request Body]",decoded)
 
