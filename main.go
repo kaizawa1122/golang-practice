@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
-	"io/util"
+	"io/ioutil"
 	"strings"
 	"net/http"
 	"net/url"
