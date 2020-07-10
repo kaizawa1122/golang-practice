@@ -7,13 +7,20 @@ import (
 	"strings"
 	"net/http"
 	"net/url"
-	"html/templete"
+	//"html/template"
+	"time"
 )
 
 var port = ":1234"
 
+type website struct {
+	Title string
+	Time time.Time
+}
+
 func main() {
 	http.HandleFunc("/",HelloServer)
+	http.Handle("/hello",http.FileServer(http.Dir("static")))
 	log.Print("Listen Port",port)
 	err := http.ListenAndServe(port,nil)
 
@@ -24,15 +31,19 @@ func main() {
 
 func HelloServer(w http.ResponseWriter, req *http.Request) {
 
+	//t,err := template.ParseFiles("???.html") //動的に使いたいときに使う
+	//if err != nil {
+	//	log.Print(err)
+	//}
+
+	//Log Check
 	method := req.Method
 	fmt.Println()
 	log.Println("[method]" + method)
-
 	for k,v := range req.Header {
 		fmt.Print("[header]" + k)
 		fmt.Println(": " + strings.Join(v, ","))
 	}
-
 	switch method {
 	case "GET":
 		req.ParseForm()
@@ -41,7 +52,6 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 			fmt.Print("[param]" + k)
 			fmt.Println(": " + strings.Join(v, ","))
 		}
-
 	case "POST":
 		defer req.Body.Close()
 		body,err := ioutil.ReadAll(req.Body)
@@ -53,7 +63,6 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 			log.Print(err)
 		}
 		fmt.Println("[Request Body]",decoded)
-
 	default:
 		log.Print("Method not allowed.\n")
 	}
