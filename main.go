@@ -7,6 +7,7 @@ import (
 	"strings"
 	"net/http"
 	"net/url"
+	"html/templete"
 )
 
 var port = ":1234"
@@ -39,10 +40,6 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 		for k, v := range req.Form {
 			fmt.Print("[param]" + k)
 			fmt.Println(": " + strings.Join(v, ","))
-			 _, err := http.NewRequest("GET", "./from.html", nil)
-			 if err != nil {
-				 log.Print(err)
-			 }
 		}
 
 	case "POST":
