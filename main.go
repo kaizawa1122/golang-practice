@@ -11,9 +11,7 @@ import (
 
 var port = ":1234"
 
-
 func main() {
-	http.HandleFunc("/hello",HelloServer)
 	http.HandleFunc("/",HelloServer)
 	log.Print("Listen Port",port)
 	err := http.ListenAndServe(port,nil)
@@ -41,6 +39,10 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 		for k, v := range req.Form {
 			fmt.Print("[param]" + k)
 			fmt.Println(": " + strings.Join(v, ","))
+			 _, err := http.NewRequest("GET", "./from.html", nil)
+			 if err != nil {
+				 log.Fatal(err)
+			 }
 		}
 
 	case "POST":
@@ -49,9 +51,9 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		decoded,error := url.QueryUnescape(string(body))
-		if error != nil {
-			log.Fatal(error)
+		decoded,err := url.QueryUnescape(string(body))
+		if err != nil {
+			log.Fatal(err)
 		}
 		fmt.Println("[Request Body]",decoded)
 
