@@ -7,7 +7,7 @@ import (
 	"strings"
 	"net/http"
 	"net/url"
-	//"html/template"
+	"html/template"
 	"time"
 )
 
@@ -19,8 +19,8 @@ type website struct {
 }
 
 func main() {
-	http.Handle("/static/",http.StripPrefix("/static/",http.FileServer(http.Dir("static"))))
-	http.HandleFunc("/",RequestLog)
+	//http.Handle("/static/",http.StripPrefix("/static/",http.FileServer(http.Dir("static"))))
+	http.HandleFunc("/abc/",handler)
 	log.Print("Listen Port",port)
 	err := http.ListenAndServe(port,nil)
 
@@ -29,13 +29,19 @@ func main() {
 	}
 }
 
-func RequestLog(w http.ResponseWriter, req *http.Request) {
+func handler(w http.ResponseWriter, req *http.Request) {
+	templateHTML, err := template.ParseFiles("./static/form.html")
+	if err != nil {
+		log.Print(err)
+	}
 
-	//teml,err := template.ParseFiles("???.html") //動的に使いたいときに使う
-	//if err != nil {
-	//	log.Print(err)
-	//}
+	if err := templateHTML.Execute(w, ""); err != nil {
+		log.Print(err)
+	}
+	RequestLog(req)
+}
 
+func RequestLog(req *http.Request) {
 	//Log Check
 	method := req.Method
 	fmt.Println()
@@ -47,7 +53,6 @@ func RequestLog(w http.ResponseWriter, req *http.Request) {
 	switch method {
 	case "GET":
 		req.ParseForm()
-
 		for k, v := range req.Form {
 			fmt.Print("[param]" + k)
 			fmt.Println(": " + strings.Join(v, ","))
