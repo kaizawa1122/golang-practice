@@ -19,8 +19,8 @@ type website struct {
 }
 
 func main() {
-	http.HandleFunc("/",HelloServer)
-	http.Handle("/hello",http.FileServer(http.Dir("static")))
+	http.Handle("/static/",http.StripPrefix("/static/",http.FileServer(http.Dir("static"))))
+	http.HandleFunc("/",RequestLog)
 	log.Print("Listen Port",port)
 	err := http.ListenAndServe(port,nil)
 
@@ -29,9 +29,9 @@ func main() {
 	}
 }
 
-func HelloServer(w http.ResponseWriter, req *http.Request) {
+func RequestLog(w http.ResponseWriter, req *http.Request) {
 
-	//t,err := template.ParseFiles("???.html") //動的に使いたいときに使う
+	//teml,err := template.ParseFiles("???.html") //動的に使いたいときに使う
 	//if err != nil {
 	//	log.Print(err)
 	//}
@@ -66,5 +66,5 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 	default:
 		log.Print("Method not allowed.\n")
 	}
-}
 
+}
